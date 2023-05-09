@@ -6,14 +6,18 @@ public class Control : MonoBehaviour
 {
     Rigidbody2D rb;
     SpringJoint2D sj;
+    PointEffector2D pe;
     bool isPressed;
     Vector3 startPos;
+
+    public bool canExplode; 
     public float maxDistance = 3f;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         sj = GetComponent<SpringJoint2D>();
+        pe = GetComponent<PointEffector2D>();
         startPos = transform.position;
     }
 
@@ -48,6 +52,11 @@ public class Control : MonoBehaviour
         rb.isKinematic = false;
 
         StartCoroutine(Release());
+
+        if(canExplode)
+        {
+            StartCoroutine(Explosion());
+        }
     }
 
     public void MaxDistance(float value)
@@ -55,6 +64,11 @@ public class Control : MonoBehaviour
         maxDistance = value;
     }
 
+    IEnumerator Explosion()
+    {
+        yield return new WaitForSeconds(5f);
+        pe.enabled = true;
+    }
     IEnumerator Release()
     {
         yield return new WaitForSeconds(0.15f);
